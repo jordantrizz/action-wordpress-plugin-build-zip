@@ -25,15 +25,17 @@ if [[ "$BUILD_DIR" != false ]]; then
 	echo "ℹ︎ BUILD_DIR is $BUILD_DIR"
 fi
 
-SVN_URL="https://plugins.svn.wordpress.org/${SLUG}/"
-SVN_DIR="${HOME}/svn-${SLUG}"
-
-# Checkout just trunk for efficiency
-# Tagging will be handled on the SVN level
-echo "➤ Checking out .org repository..."
-svn checkout --depth immediates "$SVN_URL" "$SVN_DIR"
-cd "$SVN_DIR"
-svn update --set-depth infinity trunk
+if [[ "$SVN_PLUGIN" == true ]]; then
+	# Checkout just trunk for efficiency
+	# Tagging will be handled on the SVN level
+	SVN_URL="https://plugins.svn.wordpress.org/${SLUG}/"
+	SVN_DIR="${HOME}/svn-${SLUG}"
+	
+	echo "➤ Checking out .org repository..."
+	svn checkout --depth immediates "$SVN_URL" "$SVN_DIR"
+	cd "$SVN_DIR"
+	svn update --set-depth infinity trunk
+fi
 
 if [[ "$BUILD_DIR" = false ]]; then
 	echo "➤ Copying files..."
