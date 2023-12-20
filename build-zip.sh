@@ -76,12 +76,13 @@ if [[ "$BUILD_DIR" = false ]]; then
 
 		# This will exclude everything in the .gitattributes file with the export-ignore flag
 		git archive HEAD | tar x --directory="$TMP_DIR"
+		if [[ "$SVN_PLUGIN" == true ]]; then
+			cd "$SVN_DIR"
 
-		cd "$SVN_DIR"
-
-		# Copy from clean copy to /trunk, excluding dotorg assets
-		# The --delete flag will delete anything in destination that no longer exists in source
-		rsync -rc "$TMP_DIR/" trunk/ --delete --delete-excluded
+			# Copy from clean copy to /trunk, excluding dotorg assets
+			# The --delete flag will delete anything in destination that no longer exists in source
+			rsync -rc "$TMP_DIR/" trunk/ --delete --delete-excluded
+		fi
 	fi
 else
 	echo "ℹ︎ Copying files from build directory..."
@@ -89,7 +90,9 @@ else
 fi
 
 echo "➤ Generating zip file..."
-cd "$SVN_DIR/trunk" || exit
+if [[ "$SVN_PLUGIN" == true ]]; then
+	cd "$SVN_DIR/trunk" || exit
+fi
 zip -r "${GITHUB_WORKSPACE}/${GITHUB_REPOSITORY#*/}.zip" .
 echo "zip-path=${GITHUB_WORKSPACE}/${GITHUB_REPOSITORY#*/}.zip" >> "${GITHUB_OUTPUT}"
 echo "✓ Zip file generated!"
