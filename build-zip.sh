@@ -25,6 +25,10 @@ if [[ "$BUILD_DIR" != false ]]; then
 	echo "ℹ︎ BUILD_DIR is $BUILD_DIR"
 fi
 
+if [[ -z "$SVN_PLUGIN" ]]; then
+	SVN_PLUGIN=false
+fi
+
 if [[ "$SVN_PLUGIN" == true ]]; then
 	# Checkout just trunk for efficiency
 	# Tagging will be handled on the SVN level
